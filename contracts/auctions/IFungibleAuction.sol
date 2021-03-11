@@ -11,7 +11,7 @@ interface IFungibleAuction {
 
     /// VIEWS
     /// @dev Get price per token.
-    function getPrice() external view returns (uint256);
+    function getRate() external view returns (uint256);
 
     /// @dev Check whether auction is still active, i.e. still running and with tokens remaining.
     function isActive() external view returns (bool);

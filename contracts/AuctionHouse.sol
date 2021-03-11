@@ -67,7 +67,8 @@ contract AuctionHouse is IAuctionHouse {
         uint256 tokensSold,
         uint256 minPrice
     ) external override {
-        // Acts as guard, reverts if msg.sender is not a contract created via
+        // Returns false if the caller wasn't an address in the `fungibleAuctions` array,
+        // in which case we revert.
         if (!EnumerableSet.remove(fungibleAuctions, msg.sender)) {
             revert("AuctionHouse: can only be closed by auction contract");
         }

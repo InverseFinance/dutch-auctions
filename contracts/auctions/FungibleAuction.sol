@@ -49,6 +49,7 @@ contract FungibleAuction is IFungibleAuction {
     ) {
         require(maxPrice_ >= minPrice_, "Auction: Price must go down");
         require(startTimestamp_ + duration_ >= block.timestamp, "Auction: Cannot end in the past");
+        require(initialAmount_.mul(maxPrice_) > 0, "Auction: Cannot exceed max value of uint256");
 
         if (isAuctionHouse) {
             auctionHouse = IAuctionHouse(msg.sender);
@@ -78,7 +79,7 @@ contract FungibleAuction is IFungibleAuction {
         }
 
         // The number of tokens required to buy the requested amount (or what is left of it).
-        uint256 buyPrice = getPriceInBuyTokens(amount);
+        uint256 buyPrice = amount.mul(getRate());
 
         require(
             buyTokenAddress.allowance(msg.sender, address(this)) >= buyPrice,
@@ -87,7 +88,7 @@ contract FungibleAuction is IFungibleAuction {
         require(buyTokenAddress.balanceOf(msg.sender) >= buyPrice, "Auction: Bidder balance < tokensToBuy");
 
         // Set lowest sell price, used when closing the auction in the auction house.
-        lowestSellPrice = getPrice();
+        lowestSellPrice = getRate();
 
         // Token transfers.
         buyTokenAddress.safeTransferFrom(msg.sender, address(this), buyPrice);
@@ -126,15 +127,14 @@ contract FungibleAuction is IFungibleAuction {
 
     /// VIEWS
     /// @dev Get price per token.
-    function getPrice() public view override returns (uint256) {
+    function getRate() public view override returns (uint256) {
         if (block.timestamp <= startTimestamp) {
             return maxPrice;
         }
 
-        // Guard against timestamps *very* far into the future and/or long durations.
-        // TODO: Intended? Should an item that can no longer be sold return `minPrice`?
+        // Guard against timestamps that are past the closing date of this auction.
         if (block.timestamp > startTimestamp.add(duration)) {
-            return minPrice;
+            return lowestSellPrice;
         }
 
         // Safe subtraction. Already guarded in the constructor.
@@ -155,9 +155,5 @@ contract FungibleAuction is IFungibleAuction {
             // Safe addition: the constructor already checks for an overflow.
             block.timestamp < startTimestamp + duration &&
             sellTokenAddress.balanceOf(address(this)) > 0;
-    }
-
-    function getPriceInBuyTokens(uint256 amount) internal view returns (uint256) {
-        return amount.mul(getPrice());
     }
 }
