@@ -91,15 +91,15 @@ describe("Unit tests", function () {
         maxPrice,
         minPrice,
       );
-      expect(await this.tokenA.balanceOf(this.auctionHouse.fungibleAuctions(0))).to.equal(tokensToAuction);
+      expect(await this.tokenA.balanceOf(this.auctionHouse.getFungibleAuction(0))).to.equal(tokensToAuction);
 
       // Send tokens to bidder
       await this.tokenB.connect(this.signers.admin).transfer(this.signers.bidderX.getAddress(), tokensToBid);
 
       // Approve bid tokens
-      await this.tokenB.connect(this.signers.bidderX).approve(this.auctionHouse.fungibleAuctions(0), tokensToBid);
+      await this.tokenB.connect(this.signers.bidderX).approve(this.auctionHouse.getFungibleAuction(0), tokensToBid);
 
-      await (await hre.ethers.getContractAt('FungibleAuction', this.auctionHouse.fungibleAuctions(0))).connect(this.signers.bidderX).buy(tokensToAuction);
+      await (await hre.ethers.getContractAt('FungibleAuction', this.auctionHouse.getFungibleAuction(0))).connect(this.signers.bidderX).buy(tokensToAuction);
       expect(await this.tokenA.connect(this.signers.bidderX).balanceOf(this.signers.bidderX.getAddress())).to.equal(tokensToAuction);
 
       // Should have paid in between the maxPrice and minPrice range
