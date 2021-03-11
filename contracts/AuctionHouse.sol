@@ -6,7 +6,6 @@ pragma solidity ^0.7.3;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./auctions/FungibleAuction.sol";
 
-
 /// @title Auction House
 contract AuctionHouse {
     /// @dev All fungible auctions that are either starting in the future, already active,

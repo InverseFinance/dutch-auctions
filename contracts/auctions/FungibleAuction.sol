@@ -157,11 +157,10 @@ contract FungibleAuction {
 
     /// VIEWS
     function isActive() public view returns (bool) {
-        return (
-            startTimestamp <= block.timestamp
-            && block.timestamp < startTimestamp + duration
-            && sellTokenAddress.balanceOf(address(this)) > 0
-        );
+        return
+            startTimestamp <= block.timestamp &&
+            block.timestamp < startTimestamp + duration &&
+            sellTokenAddress.balanceOf(address(this)) > 0;
     }
 
     function getPriceInBuyTokens(uint256 amount) internal view returns (uint256) {
@@ -169,9 +168,5 @@ contract FungibleAuction {
     }
 
     /// EVENTS
-    event Buy(
-        address indexed sellTokenAddress,
-        uint256 indexed amount,
-        uint256 indexed buyPrice
-    );
+    event Buy(address indexed sellTokenAddress, uint256 indexed amount, uint256 indexed buyPrice);
 }

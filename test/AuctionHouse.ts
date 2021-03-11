@@ -24,7 +24,6 @@ describe("Unit tests", function () {
     beforeEach(async function () {
       const auctionHouseArtifact: Artifact = await hre.artifacts.readArtifact("AuctionHouse");
       const erc20Artifact: Artifact = await hre.artifacts.readArtifact('MockToken');
-      const fungibleAuctionArtifact: Artifact = await hre.artifacts.readArtifact('FungibleAuction');
       const tokenCount: BigNumber = BigNumber.from("1000000000000000000000000"); // one million
 
       this.auctionHouse = <AuctionHouse>await deployContract(this.signers.admin, auctionHouseArtifact, []);
