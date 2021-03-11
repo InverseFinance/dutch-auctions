@@ -106,14 +106,12 @@ contract FungibleAuction is IFungibleAuction {
         // Allow withdrawal if all tokens have been sold.
         if (sellTokenBalance > 0) {
             require(startTimestamp + duration < block.timestamp, "Auction: auction has not ended yet");
+
+            // Transfer back what has not been sold.
+            sellTokenAddress.safeTransfer(auctioneer, sellTokenBalance);
         }
 
-        buyTokenAddress.safeTransferFrom(address(this), auctioneer, buyTokenAddress.balanceOf(address(this)));
-
-        // Transfer back what has not been sold.
-        if (sellTokenBalance > 0) {
-            sellTokenAddress.safeTransferFrom(address(this), auctioneer, sellTokenBalance);
-        }
+        buyTokenAddress.safeTransfer(auctioneer, buyTokenAddress.balanceOf(address(this)));
 
         // Callback to auction house for administrative purposes.
         if (address(auctionHouse) != address(0)) {
