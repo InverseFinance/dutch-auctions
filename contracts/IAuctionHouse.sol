@@ -2,13 +2,13 @@
 
 pragma solidity ^0.7.3;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IAuctionHouse {
     /// @dev Create new auction for a fungible token.
     function createFungible(
-        ERC20 sellTokenAddress,
-        ERC20 buyTokenAddress,
+        IERC20 sellTokenAddress,
+        IERC20 buyTokenAddress,
         uint256 amount,
         uint256 startTimestamp,
         uint256 duration,

@@ -3,8 +3,7 @@
 pragma solidity ^0.7.3;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-// TODO: Use interface. The current version of @openZeppelin/contracts lib has none that fits.
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "../IAuctionHouse.sol";
@@ -12,17 +11,17 @@ import "./IFungibleAuction.sol";
 
 /// @title Auction for fungible tokens
 contract FungibleAuction is IFungibleAuction {
+    using SafeERC20 for IERC20;
     using SafeMath for uint256;
-    using SafeERC20 for ERC20;
 
     /// @dev Only set if auction was created via the auction house factory. Used for callbacks.
     IAuctionHouse public auctionHouse;
 
     /// @notice Address of the contract governing the token that is being auctioned.
-    ERC20 public immutable sellTokenAddress;
+    IERC20 public immutable sellTokenAddress;
 
     /// @notice Address of the contract governing the token used to buy in this auction.
-    ERC20 public immutable buyTokenAddress;
+    IERC20 public immutable buyTokenAddress;
 
     /// @notice Creator of the auction and address auctioning their tokens.
     address public immutable auctioneer;
@@ -38,8 +37,8 @@ contract FungibleAuction is IFungibleAuction {
     uint256 public lowestSellPrice;
 
     constructor(
-        ERC20 sellTokenAddress_,
-        ERC20 buyTokenAddress_,
+        IERC20 sellTokenAddress_,
+        IERC20 buyTokenAddress_,
         uint256 initialAmount_,
         address auctioneer_,
         uint256 startTimestamp_,

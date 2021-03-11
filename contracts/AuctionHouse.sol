@@ -3,8 +3,7 @@
 pragma solidity ^0.7.3;
 pragma experimental ABIEncoderV2;
 
-// TODO: Use interface. The current version of @openZeppelin/contracts lib has none that fits.
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
@@ -14,7 +13,7 @@ import "./IAuctionHouse.sol";
 /// @title Auction House
 contract AuctionHouse is IAuctionHouse {
     using EnumerableSet for EnumerableSet.AddressSet;
-    using SafeERC20 for ERC20;
+    using SafeERC20 for IERC20;
 
     /// @dev All fungible auctions that are either starting in the future, already active,
     /// or haven't had their tokens withdrawn yet after finishing.
@@ -22,8 +21,8 @@ contract AuctionHouse is IAuctionHouse {
 
     /// @dev Create new auction for a fungible token.
     function createFungible(
-        ERC20 sellTokenAddress,
-        ERC20 buyTokenAddress,
+        IERC20 sellTokenAddress,
+        IERC20 buyTokenAddress,
         uint256 amount,
         uint256 startTimestamp,
         uint256 duration,
