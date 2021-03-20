@@ -51,7 +51,6 @@ contract FungibleAuction is IFungibleAuction {
     ) {
         require(maxPrice_ >= minPrice_, "Auction: Price must go down");
         require(startTimestamp_ + duration_ >= block.timestamp, "Auction: Cannot end in the past");
-        require(initialAmount_.mul(maxPrice_) > 0, "Auction: Cannot exceed max value of uint256");
 
         if (isAuctionHouse) {
             auctionHouse = IAuctionHouse(msg.sender);
