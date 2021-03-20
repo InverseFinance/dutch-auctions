@@ -73,8 +73,6 @@ contract FungibleAuction is IFungibleAuction {
 
         uint256 availableAmount = sellTokenAddress.balanceOf(address(this));
 
-        require(availableAmount > 0, "Auction: sold out");
-
         // Allow buyer to buy whatever is left.
         if (amount > availableAmount) {
             amount = availableAmount;
