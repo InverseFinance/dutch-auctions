@@ -5,6 +5,7 @@ pragma solidity ^0.7.3;
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 import "../IAuctionHouse.sol";
 import "./IFungibleAuction.sol";
@@ -13,6 +14,7 @@ import "./IFungibleAuction.sol";
 contract FungibleAuction is IFungibleAuction {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
+    using Address for address payable;
 
     /// @dev Only set if auction was created via the auction house factory. Used for callbacks.
     IAuctionHouse public auctionHouse;
@@ -97,11 +99,13 @@ contract FungibleAuction is IFungibleAuction {
         emit Buy(address(sellTokenAddress), amount, lowestSellPrice);
     }
 
-    /// @dev Withdraw the tokens that were bid.
-    /// TODO: Allow auctioneer to withdraw tokens before auction is finished, in case of long durations?
+    /**
+     * @dev Withdraw the tokens that were bid.
+     * @notice This can be called by anyone, but the tokens will always go towards the auctioneer.
+     *
+     * TODO: Allow auctioneer to withdraw tokens before auction is finished, in case of long durations?
+     */
     function withdraw() external override {
-        require(msg.sender == auctioneer, "Auction: only auctioneer can withdraw");
-
         uint256 sellTokenBalance = sellTokenAddress.balanceOf(address(this));
 
         // Allow withdrawal if all tokens have been sold.
